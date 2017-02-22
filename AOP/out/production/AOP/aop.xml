@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                http://www.springframework.org/schema/aop
+                                    http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+        <!--<bean id="audience" class="Audience"></bean>
+        <bean id="audienceAdvice" class="AudienceAdvice">
+                <property name="audience" ref="audience"></property>
+        </bean>
+
+        <bean id="sonnet29" class="Sonnet29"></bean>
+        <bean id="dukeTarget"
+              class="PoeticJuggler"
+              autowire="constructor">
+                <constructor-arg ref="sonnet29"></constructor-arg>
+        </bean>
+
+        <bean id="audienceAdvisor"
+              class="org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+              <property name="advice" ref="audienceAdvice"></property>
+                <property name="expression" value="execution(* *.perform(..))"></property>
+        </bean>
+
+
+        <bean id="duke"
+              class="org.springframework.aop.framework.ProxyFactoryBean">
+                <property name="target" ref="dukeTarget"></property>
+                <property name="interceptorNames" value="audienceAdvisor"></property>
+                <property name="proxyInterfaces" value="Performer"></property>
+        </bean>-->
+        <bean id="audience" class="Audience"></bean>
+        <bean id="duke" class="Juggler"></bean>
+
+       <aop:config>
+                <aop:aspect ref="audience">
+
+                        <aop:pointcut id="performance"
+                                      expression="execution(* Performer.perform(..))" />
+
+                        <aop:before pointcut-ref="performance" method="takeSeats" />
+                        <aop:before pointcut-ref="performance" method="turnOffPhone" />
+
+                        <aop:after-returning pointcut-ref="performance"
+                                             method="applaud" />
+
+                        <aop:after-throwing pointcut-ref="performance"
+                                            method="demandRefund" />
+                </aop:aspect>
+        </aop:config>
+
+
+        <!--<aop:aspectj-autoproxy/>-->
+
+</beans>
